@@ -1,8 +1,13 @@
 var express 	= require('express'),
 	app			= express(),
-	bodyParser	= require('body-parser');
+	bodyParser	= require('body-parser'),
+	request		= require('request'),
+	co 			= require('co'),
+	mx			= require('validate-email-dns');
+
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
+app.use(express.static('./'));
 
 var	fName='',
 	lName='',
@@ -14,20 +19,17 @@ var	fName='',
 	twitter='',
 	github='';
 	
+app.post('/api',function(req,res){
+	var ob = req.body;
+	email= ob.email;
+	co.wrap(mx)(email)
+		.then(function(correct){
+			res.send(correct)
+		})
+	})
 
 
-console.log()
-function submitForm(){
-	var form = document.getElementById('form').elements;
-	fName=form.fName.value,
-	lName=form.lName.value,
-	company=form.company.value,
-	phone=form.phone.value,
-	email=form.email.value,
-	linkedin=form.linkedin.value,
-	facebook=form.facebook.value,
-	twitter=form.twitter.value,
-	github=form.github.value;
 
-
-}
+app.listen(process.env.PORT || 3000, function(){
+	console.log('running')
+})
