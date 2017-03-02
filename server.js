@@ -10,14 +10,14 @@ require('dotenv').load(); // require and load dotenv
 
 
 /********* js files **********/
-var verifyJs	= require('./verifier.js')
+var vjs	= require('./verifier.js')
 
 
 // api request from frontjs
 app.post('/api',function(req,res){
 	var ob = req.body;
-	email= ob.email;
-	verifyJs.eVerify(email,verifyCallback)
+	// vjs.eVerify(ob,verifyCallback)
+	vjs.cEmails(ob.fName,ob.lName,ob.company,verifyCallback)
 	function verifyCallback(data){ // callback that sends to frontjs
 		res.send(data)
 	}
