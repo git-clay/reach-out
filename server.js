@@ -1,34 +1,31 @@
 var express 	= require('express'),
 	app			= express(),
 	bodyParser	= require('body-parser'),
-	request		= require('request'),
-	verifier = require('email-verify');
+	verifier 	= require('email-verify');
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(express.static('./'));
 require('dotenv').load(); // require and load dotenv
 
-var	fName='',
-	lName='',
-	company='',
-	phone='',
-	email='',
-	linkedin='',
-	facebook='',
-	twitter='',
-	github='';
-	
+
+/********* js files **********/
+var verifyJs	= require('./verifier.js')
+
+
+// api request from frontjs
 app.post('/api',function(req,res){
 	var ob = req.body;
 	email= ob.email;
-	console.log(email)
-	verifier.verify( email, function( err, info ){
-  console.log(info)
-});
+	verifyJs.eVerify(email,verifyCallback)
+	function verifyCallback(data){ // callback that sends to frontjs
+		res.send(data)
+	}
 })
 
 
+
+/*********** serves up on port ***********/
 app.listen(process.env.PORT || 3000, function(){
 	console.log('running')
 })
